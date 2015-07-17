@@ -6,21 +6,22 @@ chrome.contextMenus.create({
 	onclick: function (info, tab){
 		var linkUrl = info.linkUrl;
 		
-		var scripts = [];
-		scripts.push('var elems = document.getElementsByTagName("a");');
-		scripts.push('for (var i = 0, len = elems.length; i < len; i++) {');
-		scripts.push('	var elem = elems[i];');
-		scripts.push('	if (elem.getElementsByTagName("img").length === 0 && elem.innerText && elem.href === "' + linkUrl + '") {');
-		scripts.push('		chrome.runtime.sendMessage({');
-		scripts.push('			"method": "copy",');
-		scripts.push('			"text": elem.innerText');
-		scripts.push('		});');
-		scripts.push('		break;');
-		scripts.push('	}');
-		scripts.push('}');
+		function content_script(){
+			var elems = document.getElementsByTagName("a");
+			for (var i = 0, len = elems.length; i < len; i++) {
+				var elem = elems[i];
+				if (elem.getElementsByTagName("img").length === 0 && elem.innerText && elem.href === "linkUrl") {
+					chrome.runtime.sendMessage({
+						"method": "copy",
+						"text": elem.innerText
+					});
+					break;
+				}
+			}
+		}
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(null, {
-			"code": scripts.join("")
+			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
 		});
 	}
 }, function (){});
