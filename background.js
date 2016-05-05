@@ -1,4 +1,5 @@
 
+var ID_COPY_TEXT = "search-at-google";
 
 chrome.contextMenus.create({
 	title: "リンクテキストをコピー",
@@ -8,7 +9,11 @@ chrome.contextMenus.create({
 		"https://*/*",
 		"file:///*"
 	],
-	onclick: function (info){
+	id: ID_COPY_TEXT
+});
+
+chrome.contextMenus.onClicked.addListener(function (info) {
+	if (info.menuItemId === ID_COPY_TEXT) {
 		var linkUrl = info.linkUrl;
 		
 		function content_script(){
