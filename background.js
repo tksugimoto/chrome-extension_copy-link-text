@@ -1,16 +1,21 @@
 
 var ID_COPY_TEXT = "search-at-google";
 
-chrome.contextMenus.create({
-	title: "リンクテキストをコピー",
-	contexts: ["link"],
-	documentUrlPatterns: [
-		"http://*/*",
-		"https://*/*",
-		"file:///*"
-	],
-	id: ID_COPY_TEXT
-});
+function createContextMenus() {
+	chrome.contextMenus.create({
+		title: "リンクテキストをコピー",
+		contexts: ["link"],
+		documentUrlPatterns: [
+			"http://*/*",
+			"https://*/*",
+			"file:///*"
+		],
+		id: ID_COPY_TEXT
+	});
+}
+
+chrome.runtime.onInstalled.addListener(createContextMenus);
+chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info) {
 	if (info.menuItemId === ID_COPY_TEXT) {
