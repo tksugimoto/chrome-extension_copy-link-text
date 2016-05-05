@@ -8,7 +8,7 @@ chrome.contextMenus.create({
 		"https://*/*",
 		"file:///*"
 	],
-	onclick: function (info, tab){
+	onclick: function (info){
 		var linkUrl = info.linkUrl;
 		
 		function content_script(){
@@ -30,9 +30,9 @@ chrome.contextMenus.create({
 			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
 		});
 	}
-}, function (){});
+});
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request) {
 	if (request.method === "copy") {
 		textarea.value = request.text;
 		textarea.select();
