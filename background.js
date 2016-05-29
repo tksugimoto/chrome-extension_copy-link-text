@@ -47,8 +47,19 @@ chrome.runtime.onMessage.addListener(function (request) {
 		textarea.value = request.text;
 		textarea.select();
 		document.execCommand("copy");
+
+		chrome.notifications.create({
+			title: "コピー完了",
+			message: request.text,
+			type: "basic",
+			iconUrl: "icon/icon.png"
+		});
 	}
 });
 
 var textarea = document.createElement("textarea");
 document.body.appendChild(textarea);
+
+chrome.notifications.onClicked.addListener(notificationId => {
+	chrome.notifications.clear(notificationId);
+});
