@@ -1,5 +1,5 @@
 
-var ID_COPY_TEXT = "search-at-google";
+const ID_COPY_TEXT = "search-at-google";
 
 function createContextMenus() {
 	chrome.contextMenus.create({
@@ -19,12 +19,12 @@ chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info) {
 	if (info.menuItemId === ID_COPY_TEXT) {
-		var linkUrl = info.linkUrl;
+		const linkUrl = info.linkUrl;
 		
 		function content_script(){
-			var elems = document.getElementsByTagName("a");
-			for (var i = 0, len = elems.length; i < len; i++) {
-				var elem = elems[i];
+			const elems = document.getElementsByTagName("a");
+			for (let i = 0, len = elems.length; i < len; i++) {
+				const elem = elems[i];
 				if (elem.innerText.replace(/\s/g, "")
 				 && elem.href === "linkUrl") {
 					chrome.runtime.sendMessage({
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(function (request) {
 	}
 });
 
-var textarea = document.createElement("textarea");
+const textarea = document.createElement("textarea");
 document.body.appendChild(textarea);
 
 chrome.notifications.onClicked.addListener(notificationId => {
