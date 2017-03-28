@@ -1,7 +1,7 @@
 
 const ID_COPY_TEXT = "search-at-google";
 
-function createContextMenus() {
+const createContextMenus = () => {
 	chrome.contextMenus.create({
 		title: "リンクテキストをコピー",
 		contexts: ["link"],
@@ -12,16 +12,16 @@ function createContextMenus() {
 		],
 		id: ID_COPY_TEXT
 	});
-}
+};
 
 chrome.runtime.onInstalled.addListener(createContextMenus);
 chrome.runtime.onStartup.addListener(createContextMenus);
 
-chrome.contextMenus.onClicked.addListener(function (info) {
+chrome.contextMenus.onClicked.addListener(info => {
 	if (info.menuItemId === ID_COPY_TEXT) {
 		const linkUrl = info.linkUrl;
 		
-		function content_script(){
+		const content_script = () => {
 			const elems = document.getElementsByTagName("a");
 			for (let i = 0, len = elems.length; i < len; i++) {
 				const elem = elems[i];
@@ -34,7 +34,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
 					break;
 				}
 			}
-		}
+		};
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(null, {
 			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
@@ -42,7 +42,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
 	}
 });
 
-chrome.runtime.onMessage.addListener(function (request) {
+chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
 		textarea.value = request.text;
 		textarea.select();
