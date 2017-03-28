@@ -1,5 +1,5 @@
 
-const ID_COPY_TEXT = "search-at-google";
+const ID_COPY_TEXT = "copy_link_text";
 
 const createContextMenus = () => {
 	chrome.contextMenus.create({
