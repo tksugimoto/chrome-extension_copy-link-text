@@ -35,9 +35,11 @@ chrome.contextMenus.onClicked.addListener(info => {
 				}
 			}
 		};
+
+		const content_script_str = content_script.toString().replace("linkUrl", linkUrl);
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(null, {
-			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
+			"code": `(${content_script_str})()`
 		});
 	}
 });
