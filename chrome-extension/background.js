@@ -20,27 +20,21 @@ chrome.runtime.onStartup.addListener(createContextMenus);
 chrome.contextMenus.onClicked.addListener(info => {
 	if (info.menuItemId === ID_COPY_TEXT) {
 		const linkUrl = info.linkUrl;
-		
-		const content_script = () => {
-			const elems = document.getElementsByTagName("a");
-			for (let i = 0, len = elems.length; i < len; i++) {
-				const elem = elems[i];
-				if (elem.innerText.replace(/\s/g, "")
-				 && elem.href === "linkUrl") {
-					chrome.runtime.sendMessage({
-						"method": "copy",
-						"text": elem.innerText
-					});
-					break;
-				}
-			}
-		};
 
-		const content_script_str = content_script.toString().replace("linkUrl", linkUrl);
 		// permissionsにURL or activeTabが必要
 		// tabIdを省略すると現在のtab
 		chrome.tabs.executeScript({
-			"code": `(${content_script_str})()`
+			"file": "content_script.js"
+		}, () => {
+			chrome.tabs.query({
+				active: true,
+				currentWindow: true
+			}, ([activeTab]) => {
+				chrome.tabs.sendMessage(activeTab.id, {
+					method: "searchLinkText",
+					linkUrl
+				});
+			});
 		});
 	}
 });
