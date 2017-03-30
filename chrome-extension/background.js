@@ -38,7 +38,8 @@ chrome.contextMenus.onClicked.addListener(info => {
 
 		const content_script_str = content_script.toString().replace("linkUrl", linkUrl);
 		// permissionsにURL or activeTabが必要
-		chrome.tabs.executeScript(null, {
+		// tabIdを省略すると現在のtab
+		chrome.tabs.executeScript({
 			"code": `(${content_script_str})()`
 		});
 	}
