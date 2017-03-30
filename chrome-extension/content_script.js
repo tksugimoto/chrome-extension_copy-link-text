@@ -1,4 +1,7 @@
 (() => {
+	if (window.isAlreadyPrepared) return;
+	window.isAlreadyPrepared = true;
+
 	const searchLinkText = linkUrl => {
 		const elems = document.getElementsByTagName("a");
 		for (let i = 0, len = elems.length; i < len; i++) {
