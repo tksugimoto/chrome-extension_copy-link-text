@@ -1,7 +1,7 @@
 
 const ID_COPY_TEXT = "copy_link_text";
 
-const createContextMenus = () => {
+const createContextMenu = () => {
 	chrome.contextMenus.create({
 		title: "リンクテキストをコピー",
 		contexts: ["link"],
@@ -14,8 +14,8 @@ const createContextMenus = () => {
 	});
 };
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onStartup.addListener(createContextMenus);
+chrome.runtime.onInstalled.addListener(createContextMenu);
+chrome.runtime.onStartup.addListener(createContextMenu);
 
 chrome.contextMenus.onClicked.addListener(info => {
 	if (info.menuItemId === ID_COPY_TEXT) {
