@@ -28,10 +28,7 @@ chrome.contextMenus.onClicked.addListener(info => {
 			frameId,
 			file: "content_script.js"
 		}, () => {
-			chrome.tabs.query({
-				active: true,
-				currentWindow: true
-			}, ([activeTab]) => {
+			findActiveTab().then(activeTab => {
 				chrome.tabs.sendMessage(activeTab.id, {
 					method: "searchLinkText",
 					linkUrl
@@ -40,6 +37,17 @@ chrome.contextMenus.onClicked.addListener(info => {
 		});
 	}
 });
+
+const findActiveTab = () => {
+	return new Promise(resolve => {
+		chrome.tabs.query({
+			active: true,
+			currentWindow: true
+		}, ([activeTab]) => {
+			resolve(activeTab);
+		});
+	});
+};
 
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
