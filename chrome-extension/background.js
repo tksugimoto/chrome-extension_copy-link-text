@@ -20,10 +20,12 @@ chrome.runtime.onStartup.addListener(createContextMenus);
 chrome.contextMenus.onClicked.addListener(info => {
 	if (info.menuItemId === ID_COPY_TEXT) {
 		const linkUrl = info.linkUrl;
+		const frameId = info.frameId;
 
 		// permissionsにURL or activeTabが必要
 		// tabIdを省略すると現在のtab
 		chrome.tabs.executeScript({
+			frameId,
 			file: "content_script.js"
 		}, () => {
 			chrome.tabs.query({
@@ -33,7 +35,7 @@ chrome.contextMenus.onClicked.addListener(info => {
 				chrome.tabs.sendMessage(activeTab.id, {
 					method: "searchLinkText",
 					linkUrl
-				});
+				}, {frameId});
 			});
 		});
 	}
