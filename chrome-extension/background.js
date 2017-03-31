@@ -47,17 +47,21 @@ chrome.runtime.onMessage.addListener(request => {
 		textarea.select();
 		document.execCommand("copy");
 
-		chrome.notifications.create({
-			title: "コピー完了",
-			message: request.text,
-			type: "basic",
-			iconUrl: "icon/icon.png"
-		});
+		notifyCopyCompletion(request.text);
 	}
 });
 
 const textarea = document.createElement("textarea");
 document.body.appendChild(textarea);
+
+const notifyCopyCompletion = message => {
+	chrome.notifications.create({
+		title: "コピー完了",
+		message,
+		type: "basic",
+		iconUrl: "icon/icon.png"
+	});
+};
 
 chrome.notifications.onClicked.addListener(notificationId => {
 	chrome.notifications.clear(notificationId);
