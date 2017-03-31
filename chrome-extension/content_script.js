@@ -8,17 +8,19 @@
 			const elem = elems[i];
 			if (elem.innerText.replace(/\s/g, "")
 			 && elem.href === linkUrl) {
-				chrome.runtime.sendMessage({
-					method: "copy",
-					text: elem.innerText
-				});
-				break;
+			 	return elem.innerText;
 			}
 		}
 	};
 	chrome.runtime.onMessage.addListener(request => {
 		if (request.method === "searchLinkText") {
-			searchLinkText(request.linkUrl);
+			const linkText = searchLinkText(request.linkUrl);
+			if (linkText) {
+				chrome.runtime.sendMessage({
+					method: "copy",
+					text: linkText
+				});
+			}
 		}
 	});
 })();
