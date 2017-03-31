@@ -43,9 +43,7 @@ chrome.contextMenus.onClicked.addListener(info => {
 
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
-		textarea.value = request.text;
-		textarea.select();
-		document.execCommand("copy");
+		copy(request.text);
 
 		notifyCopyCompletion(request.text);
 	}
@@ -53,6 +51,12 @@ chrome.runtime.onMessage.addListener(request => {
 
 const textarea = document.createElement("textarea");
 document.body.appendChild(textarea);
+
+const copy = text => {
+	textarea.value = text;
+	textarea.select();
+	document.execCommand("copy");
+};
 
 const notifyCopyCompletion = message => {
 	chrome.notifications.create({
