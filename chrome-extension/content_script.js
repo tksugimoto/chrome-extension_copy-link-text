@@ -9,8 +9,8 @@
 			if (elem.innerText.replace(/\s/g, "")
 			 && elem.href === linkUrl) {
 				chrome.runtime.sendMessage({
-					"method": "copy",
-					"text": elem.innerText
+					method: "copy",
+					text: elem.innerText
 				});
 				break;
 			}
