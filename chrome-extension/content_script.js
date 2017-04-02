@@ -3,12 +3,12 @@
 	window.isAlreadyPrepared = true;
 
 	const searchLinkText = linkUrl => {
-		const elems = document.getElementsByTagName("a");
-		for (let i = 0, len = elems.length; i < len; i++) {
-			const elem = elems[i];
-			if (elem.innerText.replace(/\s/g, "")
-			 && elem.href === linkUrl) {
-			 	return elem.innerText;
+		const links = document.getElementsByTagName("a");
+		for (let i = 0, len = links.length; i < len; i++) {
+			const link = links[i];
+			if (link.innerText.replace(/\s/g, "")
+			 && link.href === linkUrl) {
+			 	return link.innerText;
 			}
 		}
 	};
