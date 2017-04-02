@@ -24,8 +24,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		const activeTabId = tab.id;
 
 		// permissionsにURL or activeTabが必要
-		// tabIdを省略すると現在のtab
-		chrome.tabs.executeScript({
+		chrome.tabs.executeScript(activeTabId, {
 			frameId,
 			file: "content_script.js"
 		}, () => {
