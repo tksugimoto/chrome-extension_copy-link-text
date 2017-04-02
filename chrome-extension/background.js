@@ -17,10 +17,11 @@ const createContextMenu = () => {
 chrome.runtime.onInstalled.addListener(createContextMenu);
 chrome.runtime.onStartup.addListener(createContextMenu);
 
-chrome.contextMenus.onClicked.addListener(info => {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_COPY_TEXT) {
 		const linkUrl = info.linkUrl;
 		const frameId = info.frameId;
+		const activeTabId = tab.id;
 
 		// permissionsにURL or activeTabが必要
 		// tabIdを省略すると現在のtab
@@ -28,26 +29,13 @@ chrome.contextMenus.onClicked.addListener(info => {
 			frameId,
 			file: "content_script.js"
 		}, () => {
-			findActiveTab().then(activeTab => {
-				chrome.tabs.sendMessage(activeTab.id, {
-					method: "searchLinkText",
-					linkUrl
-				}, {frameId});
-			});
+			chrome.tabs.sendMessage(activeTabId, {
+				method: "searchLinkText",
+				linkUrl
+			}, {frameId});
 		});
 	}
 });
-
-const findActiveTab = () => {
-	return new Promise(resolve => {
-		chrome.tabs.query({
-			active: true,
-			currentWindow: true
-		}, ([activeTab]) => {
-			resolve(activeTab);
-		});
-	});
-};
 
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
