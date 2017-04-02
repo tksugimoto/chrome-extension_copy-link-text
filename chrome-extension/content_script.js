@@ -3,22 +3,24 @@
 	window.isAlreadyPrepared = true;
 
 	const searchLinkText = linkUrl => {
-		const elems = document.getElementsByTagName("a");
-		for (let i = 0, len = elems.length; i < len; i++) {
-			const elem = elems[i];
-			if (elem.innerText.replace(/\s/g, "")
-			 && elem.href === linkUrl) {
-				chrome.runtime.sendMessage({
-					method: "copy",
-					text: elem.innerText
-				});
-				break;
+		const links = document.getElementsByTagName("a");
+		for (let i = 0, len = links.length; i < len; i++) {
+			const link = links[i];
+			if (link.innerText.replace(/\s/g, "")
+			 && link.href === linkUrl) {
+			 	return link.innerText;
 			}
 		}
 	};
 	chrome.runtime.onMessage.addListener(request => {
 		if (request.method === "searchLinkText") {
-			searchLinkText(request.linkUrl);
+			const linkText = searchLinkText(request.linkUrl);
+			if (linkText) {
+				chrome.runtime.sendMessage({
+					method: "copy",
+					text: linkText
+				});
+			}
 		}
 	});
 })();

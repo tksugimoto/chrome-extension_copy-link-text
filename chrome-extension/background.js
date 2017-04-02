@@ -1,7 +1,7 @@
 
 const ID_COPY_TEXT = "copy_link_text";
 
-const createContextMenus = () => {
+const createContextMenu = () => {
 	chrome.contextMenus.create({
 		title: "リンクテキストをコピー",
 		contexts: ["link"],
@@ -14,50 +14,53 @@ const createContextMenus = () => {
 	});
 };
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onStartup.addListener(createContextMenus);
+chrome.runtime.onInstalled.addListener(createContextMenu);
+chrome.runtime.onStartup.addListener(createContextMenu);
 
-chrome.contextMenus.onClicked.addListener(info => {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_COPY_TEXT) {
 		const linkUrl = info.linkUrl;
 		const frameId = info.frameId;
+		const activeTabId = tab.id;
 
 		// permissionsにURL or activeTabが必要
-		// tabIdを省略すると現在のtab
-		chrome.tabs.executeScript({
+		chrome.tabs.executeScript(activeTabId, {
 			frameId,
 			file: "content_script.js"
 		}, () => {
-			chrome.tabs.query({
-				active: true,
-				currentWindow: true
-			}, ([activeTab]) => {
-				chrome.tabs.sendMessage(activeTab.id, {
-					method: "searchLinkText",
-					linkUrl
-				}, {frameId});
-			});
+			chrome.tabs.sendMessage(activeTabId, {
+				method: "searchLinkText",
+				linkUrl
+			}, {frameId});
 		});
 	}
 });
 
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
-		textarea.value = request.text;
-		textarea.select();
-		document.execCommand("copy");
+		copy(request.text);
 
-		chrome.notifications.create({
-			title: "コピー完了",
-			message: request.text,
-			type: "basic",
-			iconUrl: "icon/icon.png"
-		});
+		notifyCopyCompletion(request.text);
 	}
 });
 
 const textarea = document.createElement("textarea");
 document.body.appendChild(textarea);
+
+const copy = text => {
+	textarea.value = text;
+	textarea.select();
+	document.execCommand("copy");
+};
+
+const notifyCopyCompletion = message => {
+	chrome.notifications.create({
+		title: "コピー完了",
+		message,
+		type: "basic",
+		iconUrl: "icon/icon.png"
+	});
+};
 
 chrome.notifications.onClicked.addListener(notificationId => {
 	chrome.notifications.clear(notificationId);
