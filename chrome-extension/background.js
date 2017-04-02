@@ -29,7 +29,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 			file: "content_script.js"
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
-				method: "searchLinkText",
+				method: "searchLinkTexts",
 				linkUrl
 			}, {frameId});
 		});
@@ -38,9 +38,15 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
-		copy(request.text);
+		const linkTexts = request.texts;
+		if (linkTexts.length) {
+			// とりあえず既存の動作（1件目）に合わせる
+			const linkText = linkTexts[0];
 
-		notifyCopyCompletion(request.text);
+			copy(linkText);
+
+			notifyCopyCompletion(linkText);
+		}
 	}
 });
 
