@@ -39,13 +39,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 chrome.runtime.onMessage.addListener(request => {
 	if (request.method === "copy") {
 		const linkTexts = request.texts;
-		if (linkTexts.length) {
-			// とりあえず既存の動作（1件目）に合わせる
+		if (linkTexts.length === 1) {
 			const linkText = linkTexts[0];
 
 			copy(linkText);
 
 			notifyCopyCompletion(linkText);
+		} else if (linkTexts.length >= 2) {
+			localStorage.linkTexts = JSON.stringify(linkTexts);
+			chrome.windows.create({
+				url: "text_selector.html",
+				type: "popup",
+				state: "fullscreen"
+			});
 		}
 	}
 });
