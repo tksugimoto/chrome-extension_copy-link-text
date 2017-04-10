@@ -1,5 +1,6 @@
 
 const linkTexts = JSON.parse(localStorage.linkTexts || "[]");
+const method = localStorage.method;
 const list_container = document.getElementById("list_container");
 
 if (linkTexts.length === 0) {
@@ -13,7 +14,7 @@ if (linkTexts.length === 0) {
 		selectButton.append(linkText);
 		selectButton.addEventListener("click", () => {
 			chrome.runtime.sendMessage({
-				method: "copy",
+				method,
 				texts: [linkText]
 			});
 			window.close();

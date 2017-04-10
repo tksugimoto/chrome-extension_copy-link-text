@@ -47,6 +47,7 @@ chrome.runtime.onMessage.addListener(request => {
 			notifyCopyCompletion(linkText);
 		} else if (linkTexts.length >= 2) {
 			localStorage.linkTexts = JSON.stringify(linkTexts);
+			localStorage.method = "copy";
 			chrome.windows.create({
 				url: "text_selector.html",
 				type: "popup",
