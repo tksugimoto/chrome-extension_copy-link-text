@@ -14,10 +14,10 @@ if (linkTexts.length === 0) {
 		selectButton.append(linkText);
 		selectButton.addEventListener("click", () => {
 			chrome.runtime.sendMessage({
+				closeMessageSender: true,
 				method,
 				texts: [linkText]
 			});
-			window.close();
 		});
 
 		listItem.append(selectButton);
