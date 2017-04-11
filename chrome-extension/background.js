@@ -37,47 +37,30 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender) => {
-	if (request.closeMessageSender) {
-		chrome.tabs.remove(sender.tab.id, () => {
-			if (request.method === "copy") {
-				const linkTexts = request.texts;
-				if (linkTexts.length === 1) {
-					const linkText = linkTexts[0];
+	const preprocessing = request.closeMessageSender ? new Promise(resolve => {
+		chrome.tabs.remove(sender.tab.id, resolve);
+	}) : Promise.resolve();
 
-					copy(linkText);
+	preprocessing.then(() => {
+		if (request.method === "copy") {
+			const linkTexts = request.texts;
+			if (linkTexts.length === 1) {
+				const linkText = linkTexts[0];
 
-					notifyCopyCompletion(linkText);
-				} else if (linkTexts.length >= 2) {
-					localStorage.linkTexts = JSON.stringify(linkTexts);
-					localStorage.method = "copy";
-					chrome.windows.create({
-						url: "text_selector.html",
-						type: "popup",
-						state: "fullscreen"
-					});
-				}
+				copy(linkText);
+
+				notifyCopyCompletion(linkText);
+			} else if (linkTexts.length >= 2) {
+				localStorage.linkTexts = JSON.stringify(linkTexts);
+				localStorage.method = "copy";
+				chrome.windows.create({
+					url: "text_selector.html",
+					type: "popup",
+					state: "fullscreen"
+				});
 			}
-		});
-		return;
-	}
-	if (request.method === "copy") {
-		const linkTexts = request.texts;
-		if (linkTexts.length === 1) {
-			const linkText = linkTexts[0];
-
-			copy(linkText);
-
-			notifyCopyCompletion(linkText);
-		} else if (linkTexts.length >= 2) {
-			localStorage.linkTexts = JSON.stringify(linkTexts);
-			localStorage.method = "copy";
-			chrome.windows.create({
-				url: "text_selector.html",
-				type: "popup",
-				state: "fullscreen"
-			});
 		}
-	}
+	});
 });
 
 const textarea = document.createElement("textarea");
