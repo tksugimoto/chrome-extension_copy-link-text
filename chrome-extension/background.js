@@ -26,7 +26,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
 			frameId,
-			file: "content_script.js"
+			file: "search_link_texts.js"
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: "searchLinkTexts",
