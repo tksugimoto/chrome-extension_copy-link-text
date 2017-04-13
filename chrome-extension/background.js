@@ -26,7 +26,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
 			frameId,
-			file: "content_script.js"
+			file: "search_link_texts.js"
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: "searchLinkTexts",
@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	}) : Promise.resolve();
 
 	preprocessing.then(() => {
-		if (request.method === "copy") {
+		if (request.method === "linkTexts") {
 			const linkTexts = request.texts;
 			if (linkTexts.length === 1) {
 				const linkText = linkTexts[0];
@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				notifyCopyCompletion(linkText);
 			} else if (linkTexts.length >= 2) {
 				localStorage.linkTexts = JSON.stringify(linkTexts);
-				localStorage.method = "copy";
+				localStorage.method = "linkTexts";
 				chrome.windows.create({
 					url: "text_selector.html",
 					type: "popup",

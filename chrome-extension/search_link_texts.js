@@ -22,7 +22,7 @@
 			const linkTexts = searchLinkTexts(request.linkUrl);
 			const uniqueLinkTexts = uniq(linkTexts);
 			chrome.runtime.sendMessage({
-				method: "copy",
+				method: "linkTexts",
 				texts: uniqueLinkTexts
 			});
 		}
