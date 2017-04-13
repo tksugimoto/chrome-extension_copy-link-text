@@ -14,7 +14,7 @@
 		}).map(link => {
 			return link.innerText.trim();
 		}).filter(linkText => {
-			return linkText.replace(/\s/g, "");
+			return linkText;
 		});
 	};
 	chrome.runtime.onMessage.addListener(request => {
