@@ -12,9 +12,9 @@
 		return Array.from(links).filter(link => {
 			return link.href === linkUrl;
 		}).map(link => {
-			return link.innerText;
+			return link.innerText.trim();
 		}).filter(linkText => {
-			return linkText.replace(/\s/g, "");
+			return linkText;
 		});
 	};
 	chrome.runtime.onMessage.addListener(request => {
