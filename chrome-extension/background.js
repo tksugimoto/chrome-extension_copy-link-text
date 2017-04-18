@@ -51,8 +51,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 				notifyCopyCompletion(linkText);
 			} else if (linkTexts.length >= 2) {
-				localStorage.linkTexts = JSON.stringify(linkTexts);
-				localStorage.method = "linkTexts";
+				localStorage.textSelectorData = JSON.stringify({
+					linkTexts,
+					returnMessageBase: {
+						method: "linkTexts"
+					}
+				});
 				chrome.windows.create({
 					url: "text_selector.html",
 					type: "popup",
