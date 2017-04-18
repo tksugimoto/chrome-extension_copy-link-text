@@ -1,6 +1,9 @@
 
-const linkTexts = JSON.parse(localStorage.linkTexts || "[]");
-const method = localStorage.method;
+const {
+	linkTexts = [],
+	returnMessageBase = {}
+} = JSON.parse(localStorage.textSelectorData || "{}");
+
 const list_container = document.getElementById("list_container");
 
 if (linkTexts.length === 0) {
@@ -13,11 +16,11 @@ if (linkTexts.length === 0) {
 		selectButton.classList.add("select-button");
 		selectButton.append(linkText);
 		selectButton.addEventListener("click", () => {
-			chrome.runtime.sendMessage({
+			const message = Object.assign({}, returnMessageBase, {
 				closeMessageSender: true,
-				method,
 				texts: [linkText]
 			});
+			chrome.runtime.sendMessage(message);
 		});
 
 		listItem.append(selectButton);
