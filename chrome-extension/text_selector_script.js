@@ -1,7 +1,7 @@
 
 const {
 	linkTexts = [],
-	returnMessageBase = {}
+	returnMessageBase = {},
 } = JSON.parse(localStorage.textSelectorData || '{}');
 
 const list_container = document.getElementById('list_container');
@@ -18,7 +18,7 @@ if (linkTexts.length === 0) {
 		selectButton.addEventListener('click', () => {
 			const message = Object.assign({}, returnMessageBase, {
 				closeMessageSender: true,
-				texts: [linkText]
+				texts: [linkText],
 			});
 			chrome.runtime.sendMessage(message);
 		});

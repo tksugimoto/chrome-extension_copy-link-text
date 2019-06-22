@@ -31,7 +31,7 @@
 				if (linkText) {
 					chrome.runtime.sendMessage({
 						method: 'linkTexts',
-						texts: [linkText]
+						texts: [linkText],
 					});
 					return;
 				}
@@ -40,7 +40,7 @@
 			const uniqueLinkTexts = uniq(linkTexts);
 			chrome.runtime.sendMessage({
 				method: 'linkTexts',
-				texts: uniqueLinkTexts
+				texts: uniqueLinkTexts,
 			});
 		}
 	});

@@ -8,9 +8,9 @@ const createContextMenu = () => {
 		documentUrlPatterns: [
 			'http://*/*',
 			'https://*/*',
-			'file:///*'
+			'file:///*',
 		],
-		id: ID_COPY_TEXT
+		id: ID_COPY_TEXT,
 	});
 };
 
@@ -26,11 +26,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
 			frameId,
-			file: 'search_link_texts.js'
+			file: 'search_link_texts.js',
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: 'searchLinkTexts',
-				linkUrl
+				linkUrl,
 			}, {frameId});
 		});
 	}
@@ -54,13 +54,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				localStorage.textSelectorData = JSON.stringify({
 					linkTexts,
 					returnMessageBase: {
-						method: 'linkTexts'
-					}
+						method: 'linkTexts',
+					},
 				});
 				chrome.windows.create({
 					url: 'text_selector.html',
 					type: 'popup',
-					state: 'fullscreen'
+					state: 'fullscreen',
 				});
 			}
 		}
@@ -81,7 +81,7 @@ const notifyCopyCompletion = message => {
 		title: 'コピー完了',
 		message,
 		type: 'basic',
-		iconUrl: 'icon/icon.png'
+		iconUrl: 'icon/icon.png',
 	});
 };
 
