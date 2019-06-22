@@ -77,11 +77,18 @@ const copy = text => {
 };
 
 const notifyCopyCompletion = message => {
+	/** 通知を何秒後に削除するか [s] */
+	const notificationTimeoutSec = 5;
+
 	chrome.notifications.create({
 		title: 'コピー完了',
 		message,
 		type: 'basic',
 		iconUrl: 'icon/icon.png',
+	}, notificationId => {
+		setTimeout(() => {
+			chrome.notifications.clear(notificationId);
+		}, notificationTimeoutSec * 1000);
 	});
 };
 
