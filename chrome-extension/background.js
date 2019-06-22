@@ -1,14 +1,14 @@
 
-const ID_COPY_TEXT = "copy_link_text";
+const ID_COPY_TEXT = 'copy_link_text';
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
-		title: "リンクテキストをコピー",
-		contexts: ["link"],
+		title: 'リンクテキストをコピー',
+		contexts: ['link'],
 		documentUrlPatterns: [
-			"http://*/*",
-			"https://*/*",
-			"file:///*"
+			'http://*/*',
+			'https://*/*',
+			'file:///*'
 		],
 		id: ID_COPY_TEXT
 	});
@@ -26,10 +26,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
 			frameId,
-			file: "search_link_texts.js"
+			file: 'search_link_texts.js'
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
-				method: "searchLinkTexts",
+				method: 'searchLinkTexts',
 				linkUrl
 			}, {frameId});
 		});
@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	}) : Promise.resolve();
 
 	preprocessing.then(() => {
-		if (request.method === "linkTexts") {
+		if (request.method === 'linkTexts') {
 			const linkTexts = request.texts;
 			if (linkTexts.length === 1) {
 				const linkText = linkTexts[0];
@@ -54,34 +54,34 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				localStorage.textSelectorData = JSON.stringify({
 					linkTexts,
 					returnMessageBase: {
-						method: "linkTexts"
+						method: 'linkTexts'
 					}
 				});
 				chrome.windows.create({
-					url: "text_selector.html",
-					type: "popup",
-					state: "fullscreen"
+					url: 'text_selector.html',
+					type: 'popup',
+					state: 'fullscreen'
 				});
 			}
 		}
 	});
 });
 
-const textarea = document.createElement("textarea");
+const textarea = document.createElement('textarea');
 document.body.appendChild(textarea);
 
 const copy = text => {
 	textarea.value = text;
 	textarea.select();
-	document.execCommand("copy");
+	document.execCommand('copy');
 };
 
 const notifyCopyCompletion = message => {
 	chrome.notifications.create({
-		title: "コピー完了",
+		title: 'コピー完了',
 		message,
-		type: "basic",
-		iconUrl: "icon/icon.png"
+		type: 'basic',
+		iconUrl: 'icon/icon.png'
 	});
 };
 
