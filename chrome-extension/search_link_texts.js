@@ -25,7 +25,7 @@
 	chrome.runtime.onMessage.addListener(request => {
 		if (request.method === 'searchLinkTexts') {
 			if (latestContextMenuTriggeredAnchorElement
-			 && latestContextMenuTriggeredAnchorElement.href === request.linkUrl
+				&& latestContextMenuTriggeredAnchorElement.href === request.linkUrl
 			) {
 				const linkText = latestContextMenuTriggeredAnchorElement.innerText.trim();
 				if (linkText) {
