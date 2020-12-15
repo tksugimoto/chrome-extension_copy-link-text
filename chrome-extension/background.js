@@ -3,7 +3,7 @@ const ID_COPY_TEXT = 'copy_link_text';
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
-		title: 'Copy link text (リンクテキストをコピー)',
+		title: 'Copy link text (リンクテキストをコピー) (&C)',
 		contexts: ['link'],
 		documentUrlPatterns: [
 			'http://*/*',
