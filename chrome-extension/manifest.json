@@ -4,12 +4,13 @@
 	"manifest_version": 2,
 
 	"description": "",
-		
+
 	"icons": {
 		"128": "icon/icon.png"
 	},
 
 	"permissions": [
+		"storage",
 		"contextMenus",
 		"notifications",
 		"activeTab"

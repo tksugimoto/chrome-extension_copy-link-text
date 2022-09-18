@@ -51,16 +51,19 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 				notifyCopyCompletion(linkText);
 			} else if (linkTexts.length >= 2) {
-				localStorage.textSelectorData = JSON.stringify({
-					linkTexts,
-					returnMessageBase: {
-						method: 'linkTexts',
+				chrome.storage.local.set({
+					textSelectorData: {
+						linkTexts,
+						returnMessageBase: {
+							method: 'linkTexts',
+						},
 					},
-				});
-				chrome.windows.create({
-					url: 'text_selector.html',
-					type: 'popup',
-					state: 'fullscreen',
+				}, () => {
+					chrome.windows.create({
+						url: 'text_selector.html',
+						type: 'popup',
+						state: 'fullscreen',
+					});
 				});
 			}
 		}
