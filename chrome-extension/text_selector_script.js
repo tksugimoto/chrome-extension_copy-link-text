@@ -19,14 +19,13 @@ chrome.storage.local.get({
 		selectButton.classList.add('select-button');
 		selectButton.append(linkText);
 		selectButton.addEventListener('click', () => {
-			copy(linkText);
-			window.setTimeout(() => {
+			copy(linkText).then(() => {
 				chrome.runtime.sendMessage({
 					closeMessageSender: true,
 					method: 'notify',
 					linkText,
 				});
-			}, 100 /* ms */); // すぐに閉じるとコピーができない
+			});
 		});
 		if (linkTexts.length === 1) selectButton.click();
 
@@ -35,16 +34,8 @@ chrome.storage.local.get({
 	});
 });
 
-const textarea = document.createElement('textarea');
-document.body.appendChild(textarea);
-textarea.style.display = 'none';
-
 const copy = text => {
-	textarea.value = text;
-	textarea.style.display = '';
-	textarea.select();
-	document.execCommand('copy');
-	textarea.style.display = 'none';
+	return navigator.clipboard.writeText(text);
 };
 
 document.getElementById('close').addEventListener('click', () => {
