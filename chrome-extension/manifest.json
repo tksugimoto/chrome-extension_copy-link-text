@@ -20,6 +20,16 @@
 		"<all_urls>"
 	],
 
+	"content_scripts": [{
+		"matches": [
+			"<all_urls>"
+		],
+		"all_frames": true,
+		"js": [
+			"search_link_texts.js"
+		]
+	}],
+
 	"background": {
 		"service_worker": "background.js"
 	}
