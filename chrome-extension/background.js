@@ -24,9 +24,16 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		const activeTabId = tab.id;
 
 		// permissionsにURL or activeTabが必要
-		chrome.tabs.executeScript(activeTabId, {
-			frameId,
-			file: 'search_link_texts.js',
+		chrome.scripting.executeScript({
+			target: {
+				tabId: activeTabId,
+				frameIds: [
+					frameId,
+				],
+			},
+			files: [
+				'search_link_texts.js',
+			],
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: 'searchLinkTexts',
@@ -42,39 +49,28 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	}) : Promise.resolve();
 
 	preprocessing.then(() => {
+		if (request.method === 'notify') {
+			notifyCopyCompletion(request.linkText);
+			return;
+		}
 		if (request.method === 'linkTexts') {
 			const linkTexts = request.texts;
-			if (linkTexts.length === 1) {
-				const linkText = linkTexts[0];
-
-				copy(linkText);
-
-				notifyCopyCompletion(linkText);
-			} else if (linkTexts.length >= 2) {
-				localStorage.textSelectorData = JSON.stringify({
-					linkTexts,
-					returnMessageBase: {
-						method: 'linkTexts',
+			if (linkTexts.length >= 1) {
+				chrome.storage.local.set({
+					textSelectorData: {
+						linkTexts,
 					},
-				});
-				chrome.windows.create({
-					url: 'text_selector.html',
-					type: 'popup',
-					state: 'fullscreen',
+				}, () => {
+					chrome.windows.create({
+						url: 'text_selector.html',
+						type: 'popup',
+						state: linkTexts.length >= 2 ? 'fullscreen' : 'minimized',
+					});
 				});
 			}
 		}
 	});
 });
-
-const textarea = document.createElement('textarea');
-document.body.appendChild(textarea);
-
-const copy = text => {
-	textarea.value = text;
-	textarea.select();
-	document.execCommand('copy');
-};
 
 const notifyCopyCompletion = message => {
 	/** 通知を何秒後に削除するか [s] */

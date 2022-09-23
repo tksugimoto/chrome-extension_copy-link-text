@@ -1,14 +1,17 @@
 
-const {
-	linkTexts = [],
-	returnMessageBase = {},
-} = JSON.parse(localStorage.textSelectorData || '{}');
+chrome.storage.local.get({
+	textSelectorData: {},
+}, result => {
+	const {
+		linkTexts = [],
+	} = result.textSelectorData;
 
-const list_container = document.getElementById('list_container');
+	const list_container = document.getElementById('list_container');
 
-if (linkTexts.length === 0) {
-	window.close();
-} else {
+	if (linkTexts.length === 0) {
+		window.close();
+		return;
+	}
 	linkTexts.forEach(linkText => {
 		const listItem = document.createElement('li');
 
@@ -16,17 +19,33 @@ if (linkTexts.length === 0) {
 		selectButton.classList.add('select-button');
 		selectButton.append(linkText);
 		selectButton.addEventListener('click', () => {
-			const message = Object.assign({}, returnMessageBase, {
-				closeMessageSender: true,
-				texts: [linkText],
-			});
-			chrome.runtime.sendMessage(message);
+			copy(linkText);
+			window.setTimeout(() => {
+				chrome.runtime.sendMessage({
+					closeMessageSender: true,
+					method: 'notify',
+					linkText,
+				});
+			}, 100 /* ms */); // すぐに閉じるとコピーができない
 		});
+		if (linkTexts.length === 1) selectButton.click();
 
 		listItem.append(selectButton);
 		list_container.append(listItem);
 	});
-}
+});
+
+const textarea = document.createElement('textarea');
+document.body.appendChild(textarea);
+textarea.style.display = 'none';
+
+const copy = text => {
+	textarea.value = text;
+	textarea.style.display = '';
+	textarea.select();
+	document.execCommand('copy');
+	textarea.style.display = 'none';
+};
 
 document.getElementById('close').addEventListener('click', () => {
 	window.close();
