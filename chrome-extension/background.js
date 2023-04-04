@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 					chrome.windows.create({
 						url: 'text_selector.html',
 						type: 'popup',
-						state: linkTexts.length >= 2 ? 'fullscreen' : 'minimized',
+						state: linkTexts.length >= 2 ? 'fullscreen' : 'normal',
 					});
 				});
 			}
