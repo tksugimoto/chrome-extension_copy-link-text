@@ -17,7 +17,7 @@
 		return Array.from(links).filter(link => {
 			return link.href === linkUrl;
 		}).map(link => {
-			return link.innerText.trim();
+			return link.textContent.trim();
 		}).filter(linkText => {
 			return linkText;
 		});
@@ -27,7 +27,7 @@
 			if (latestContextMenuTriggeredAnchorElement
 				&& latestContextMenuTriggeredAnchorElement.href === request.linkUrl
 			) {
-				const linkText = latestContextMenuTriggeredAnchorElement.innerText.trim();
+				const linkText = latestContextMenuTriggeredAnchorElement.textContent.trim();
 				if (linkText) {
 					chrome.runtime.sendMessage({
 						method: 'linkTexts',
